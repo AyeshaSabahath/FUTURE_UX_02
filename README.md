@@ -195,10 +195,7 @@ Inspired by:
 
 ## Design Link
 
-(Add your Canva/Figma design link here)
-
-Example:
-https://www.canva.com/design/your-project-link
+(selfcare-salon.my.canva.site)
 
 ---
 
