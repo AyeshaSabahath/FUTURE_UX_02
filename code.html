@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Glow Salon</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet">
+  <script src="/_sdk/data_sdk.js"></script>
+  <style>
+        * { font-family: 'DM Sans', sans-serif; }
+        .font-display { font-family: 'Playfair Display', serif; }
+        :root {
+            --rose: #e8b4b8;
+            --blush: #f9e4e8;
+            --cream: #fdf6f0;
+            --mauve: #c9a0a0;
+            --deep: #5c3d3d;
+            --sage: #a8b5a0;
+        }
+        .screen { display: none; }
+        .screen.active { display: flex; flex-direction: column; }
+        .nav-item.active { color: var(--deep); }
+        .nav-item.active .nav-dot { opacity: 1; }
+        .time-slot.selected { background: var(--rose) !important; color: #fff !important; }
+        .day-btn.selected { background: var(--deep) !important; color: #fff !important; }
+        .service-card.selected { box-shadow: 0 0 0 2px var(--rose); outline: 2.5px solid var(--rose); }
+        .specialist-card.selected { outline: 2.5px solid var(--rose); }
+        .fade-in { animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+        .check-pulse { animation: pulse 0.6s ease 2; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        body { background: var(--cream); }
+    </style>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+ </head>
+ <body data-template-id="__page-root" class="w-full" style="max-width:480px;margin:0 auto;min-height:calc(100 * min(var(--vh,1vh),1vh));"><!-- SPLASH -->
+  <div id="splash-screen" class="screen active items-center justify-center" style="height:calc(100 * min(var(--vh,1vh),1vh));position:relative;overflow:hidden;"><img data-template-id="splash-bg" class="canva-image absolute inset-0 w-full h-full object-cover" loading="lazy" style="filter:brightness(0.5) blur(2px);">
+   <div class="relative z-10 text-center">
+    <h1 data-template-id="splash-title" class="canva-text font-display text-5xl mb-2"></h1>
+    <p data-template-id="splash-tagline" class="canva-text text-lg tracking-widest uppercase"></p>
+   </div>
+  </div><!-- HOME -->
+  <div id="home-screen" class="screen" style="padding-bottom:70px;">
+   <div class="relative h-48 overflow-hidden rounded-b-3xl"><img data-template-id="home-hero" class="canva-image w-full h-full object-cover" loading="lazy">
+    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+    <div class="absolute bottom-4 left-4">
+     <h2 data-template-id="home-greeting" class="canva-text font-display text-2xl"></h2>
+     <p data-template-id="home-subtitle" class="canva-text text-sm mt-1"></p>
+    </div>
+   </div>
+   <div class="px-4 mt-4">
+    <div class="relative"><i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style="color:var(--mauve)"></i> <input id="search-input" type="text" data-template-id="search-field" class="canva-input w-full pl-10 pr-4 py-3 rounded-xl border-0 text-sm" style="background:var(--blush);">
+    </div>
+   </div>
+   <div class="px-4 mt-5">
+    <h3 data-template-id="services-heading" class="canva-text font-semibold text-base mb-3"></h3>
+    <div class="flex gap-3 overflow-x-auto hide-scroll pb-2" id="home-services-row"><button onclick="selectServiceByName('Haircut &amp; Styling')" class="flex-shrink-0 flex flex-col items-center gap-1.5 w-20">
+      <div class="w-16 h-16 rounded-2xl overflow-hidden">
+       <img data-template-id="svc-haircut-img" class="canva-image w-full h-full object-cover" loading="lazy">
+      </div><span data-template-id="svc-haircut-label" class="canva-text text-xs text-center"></span> </button> <button onclick="selectServiceByName('Facial Treatment')" class="flex-shrink-0 flex flex-col items-center gap-1.5 w-20">
+      <div class="w-16 h-16 rounded-2xl overflow-hidden">
+       <img data-template-id="svc-facial-img" class="canva-image w-full h-full object-cover" loading="lazy">
+      </div><span data-template-id="svc-facial-label" class="canva-text text-xs text-center"></span> </button> <button onclick="selectServiceByName('Nail Art')" class="flex-shrink-0 flex flex-col items-center gap-1.5 w-20">
+      <div class="w-16 h-16 rounded-2xl overflow-hidden">
+       <img data-template-id="svc-nails-img" class="canva-image w-full h-full object-cover" loading="lazy">
+      </div><span data-template-id="svc-nails-label" class="canva-text text-xs text-center"></span> </button> <button onclick="selectServiceByName('Makeup')" class="flex-shrink-0 flex flex-col items-center gap-1.5 w-20">
+      <div class="w-16 h-16 rounded-2xl overflow-hidden">
+       <img data-template-id="svc-makeup-img" class="canva-image w-full h-full object-cover" loading="lazy">
+      </div><span data-template-id="svc-makeup-label" class="canva-text text-xs text-center"></span> </button> <button onclick="selectServiceByName('Massage')" class="flex-shrink-0 flex flex-col items-center gap-1.5 w-20">
+      <div class="w-16 h-16 rounded-2xl overflow-hidden">
+       <img data-template-id="svc-massage-img" class="canva-image w-full h-full object-cover" loading="lazy">
+      </div><span data-template-id="svc-massage-label" class="canva-text text-xs text-center"></span> </button> <button onclick="selectServiceByName('Waxing')" class="flex-shrink-0 flex flex-col items-center gap-1.5 w-20">
+      <div class="w-16 h-16 rounded-2xl overflow-hidden">
+       <img data-template-id="svc-waxing-img" class="canva-image w-full h-full object-cover" loading="lazy">
+      </div><span data-template-id="svc-waxing-label" class="canva-text text-xs text-center"></span> </button>
+    </div>
+   </div>
+   <div class="px-4 mt-5">
+    <h3 data-template-id="specialists-heading" class="canva-text font-semibold text-base mb-3"></h3>
+    <div class="grid grid-cols-2 gap-3"><button onclick="selectSpecialistByName('Priya Sharma')" class="rounded-2xl overflow-hidden text-left" style="background:white;">
+      <div class="h-32 overflow-hidden">
+       <img data-template-id="spec-1-img" class="canva-image w-full h-full object-cover" loading="lazy">
+      </div>
+      <div class="p-2.5">
+       <p data-template-id="spec-1-name" class="canva-text font-semibold text-sm"></p>
+       <p data-template-id="spec-1-role" class="canva-text text-xs" style="color:var(--mauve)"></p>
+       <div class="flex items-center gap-1 mt-1">
+        <i data-lucide="star" class="w-3 h-3 fill-amber-400 text-amber-400"></i><span class="text-xs" style="color:var(--deep)">4.9</span>
+       </div>
+      </div></button> <button onclick="selectSpecialistByName('Ananya Reddy')" class="rounded-2xl overflow-hidden text-left" style="background:white;">
+      <div class="h-32 overflow-hidden">
+       <img data-template-id="spec-2-img" class="canva-image w-full h-full object-cover" loading="lazy">
+      </div>
+      <div class="p-2.5">
+       <p data-template-id="spec-2-name" class="canva-text font-semibold text-sm"></p>
+       <p data-template-id="spec-2-role" class="canva-text text-xs" style="color:var(--mauve)"></p>
+       <div class="flex items-center gap-1 mt-1">
+        <i data-lucide="star" class="w-3 h-3 fill-amber-400 text-amber-400"></i><span class="text-xs" style="color:var(--deep)">4.8</span>
+       </div>
+      </div></button> <button onclick="selectSpecialistByName('Meera Patel')" class="rounded-2xl overflow-hidden text-left" style="background:white;">
+      <div class="h-32 overflow-hidden">
+       <img data-template-id="spec-3-img" class="canva-image w-full h-full object-cover" loading="lazy">
+      </div>
+      <div class="p-2.5">
+       <p data-template-id="spec-3-name" class="canva-text font-semibold text-sm"></p>
+       <p data-template-id="spec-3-role" class="canva-text text-xs" style="color:var(--mauve)"></p>
+       <div class="flex items-center gap-1 mt-1">
+        <i data-lucide="star" class="w-3 h-3 fill-amber-400 text-amber-400"></i><span class="text-xs" style="color:var(--deep)">4.7</span>
+       </div>
+      </div></button> <button onclick="selectSpecialistByName('Divya Nair')" class="rounded-2xl overflow-hidden text-left" style="background:white;">
+      <div class="h-32 overflow-hidden">
+       <img data-template-id="spec-4-img" class="canva-image w-full h-full object-cover" loading="lazy">
+      </div>
+      <div class="p-2.5">
+       <p data-template-id="spec-4-name" class="canva-text font-semibold text-sm"></p>
+       <p data-template-id="spec-4-role" class="canva-text text-xs" style="color:var(--mauve)"></p>
+       <div class="flex items-center gap-1 mt-1">
+        <i data-lucide="star" class="w-3 h-3 fill-amber-400 text-amber-400"></i><span class="text-xs" style="color:var(--deep)">4.9</span>
+       </div>
+      </div></button>
+    </div>
+   </div>
+  </div><!-- SERVICES -->
+  <div id="services-screen" class="screen" style="padding-bottom:70px;">
+   <div class="px-4 pt-5 pb-3">
+    <h2 data-template-id="services-title" class="canva-text font-display text-xl"></h2>
+   </div>
+   <div class="px-4 space-y-3" id="services-list"><button onclick="selectServiceByName('Haircut &amp; Styling')" class="service-card w-full flex gap-3 rounded-2xl p-3 text-left" style="background:white;" data-service="Haircut &amp; Styling">
+     <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+      <img data-template-id="svc2-haircut-img" class="canva-image w-full h-full object-cover" loading="lazy">
+     </div>
+     <div class="flex-1 min-w-0">
+      <p data-template-id="svc2-haircut-name" class="canva-text font-semibold text-sm"></p>
+      <p data-template-id="svc2-haircut-desc" class="canva-text text-xs mt-0.5" style="color:var(--mauve)"></p>
+      <div class="flex items-center justify-between mt-2"><span data-template-id="svc2-haircut-price" class="canva-text font-semibold text-sm" style="color:var(--deep)"></span> <span data-template-id="svc2-haircut-dur" class="canva-text text-xs" style="color:var(--mauve)"></span>
+      </div>
+     </div></button> <button onclick="selectServiceByName('Facial Treatment')" class="service-card w-full flex gap-3 rounded-2xl p-3 text-left" style="background:white;" data-service="Facial Treatment">
+     <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+      <img data-template-id="svc2-facial-img" class="canva-image w-full h-full object-cover" loading="lazy">
+     </div>
+     <div class="flex-1 min-w-0">
+      <p data-template-id="svc2-facial-name" class="canva-text font-semibold text-sm"></p>
+      <p data-template-id="svc2-facial-desc" class="canva-text text-xs mt-0.5" style="color:var(--mauve)"></p>
+      <div class="flex items-center justify-between mt-2"><span data-template-id="svc2-facial-price" class="canva-text font-semibold text-sm" style="color:var(--deep)"></span> <span data-template-id="svc2-facial-dur" class="canva-text text-xs" style="color:var(--mauve)"></span>
+      </div>
+     </div></button> <button onclick="selectServiceByName('Nail Art')" class="service-card w-full flex gap-3 rounded-2xl p-3 text-left" style="background:white;" data-service="Nail Art">
+     <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+      <img data-template-id="svc2-nails-img" class="canva-image w-full h-full object-cover" loading="lazy">
+     </div>
+     <div class="flex-1 min-w-0">
+      <p data-template-id="svc2-nails-name" class="canva-text font-semibold text-sm"></p>
+      <p data-template-id="svc2-nails-desc" class="canva-text text-xs mt-0.5" style="color:var(--mauve)"></p>
+      <div class="flex items-center justify-between mt-2"><span data-template-id="svc2-nails-price" class="canva-text font-semibold text-sm" style="color:var(--deep)"></span> <span data-template-id="svc2-nails-dur" class="canva-text text-xs" style="color:var(--mauve)"></span>
+      </div>
+     </div></button> <button onclick="selectServiceByName('Makeup')" class="service-card w-full flex gap-3 rounded-2xl p-3 text-left" style="background:white;" data-service="Makeup">
+     <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+      <img data-template-id="svc2-makeup-img" class="canva-image w-full h-full object-cover" loading="lazy">
+     </div>
+     <div class="flex-1 min-w-0">
+      <p data-template-id="svc2-makeup-name" class="canva-text font-semibold text-sm"></p>
+      <p data-template-id="svc2-makeup-desc" class="canva-text text-xs mt-0.5" style="color:var(--mauve)"></p>
+      <div class="flex items-center justify-between mt-2"><span data-template-id="svc2-makeup-price" class="canva-text font-semibold text-sm" style="color:var(--deep)"></span> <span data-template-id="svc2-makeup-dur" class="canva-text text-xs" style="color:var(--mauve)"></span>
+      </div>
+     </div></button> <button onclick="selectServiceByName('Massage')" class="service-card w-full flex gap-3 rounded-2xl p-3 text-left" style="background:white;" data-service="Massage">
+     <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+      <img data-template-id="svc2-massage-img" class="canva-image w-full h-full object-cover" loading="lazy">
+     </div>
+     <div class="flex-1 min-w-0">
+      <p data-template-id="svc2-massage-name" class="canva-text font-semibold text-sm"></p>
+      <p data-template-id="svc2-massage-desc" class="canva-text text-xs mt-0.5" style="color:var(--mauve)"></p>
+      <div class="flex items-center justify-between mt-2"><span data-template-id="svc2-massage-price" class="canva-text font-semibold text-sm" style="color:var(--deep)"></span> <span data-template-id="svc2-massage-dur" class="canva-text text-xs" style="color:var(--mauve)"></span>
+      </div>
+     </div></button> <button onclick="selectServiceByName('Waxing')" class="service-card w-full flex gap-3 rounded-2xl p-3 text-left" style="background:white;" data-service="Waxing">
+     <div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+      <img data-template-id="svc2-waxing-img" class="canva-image w-full h-full object-cover" loading="lazy">
+     </div>
+     <div class="flex-1 min-w-0">
+      <p data-template-id="svc2-waxing-name" class="canva-text font-semibold text-sm"></p>
+      <p data-template-id="svc2-waxing-desc" class="canva-text text-xs mt-0.5" style="color:var(--mauve)"></p>
+      <div class="flex items-center justify-between mt-2"><span data-template-id="svc2-waxing-price" class="canva-text font-semibold text-sm" style="color:var(--deep)"></span> <span data-template-id="svc2-waxing-dur" class="canva-text text-xs" style="color:var(--mauve)"></span>
+      </div>
+     </div></button>
+   </div>
+  </div><!-- BOOKING -->
+  <div id="booking-screen" class="screen" style="padding-bottom:70px;">
+   <div class="px-4 pt-5 pb-2 flex items-center gap-3"><button onclick="goBack()" class="w-9 h-9 rounded-full flex items-center justify-center" style="background:var(--blush)"><i data-lucide="arrow-left" class="w-4 h-4" style="color:var(--deep)"></i></button>
+    <h2 data-template-id="booking-title" class="canva-text font-display text-xl"></h2>
+   </div>
+   <div class="px-4 mt-2 rounded-2xl mx-4 p-3" style="background:white;">
+    <p id="booking-service-name" class="font-semibold text-sm" style="color:var(--deep)"></p>
+    <p id="booking-specialist-name" class="text-xs mt-0.5" style="color:var(--mauve)"></p>
+   </div>
+   <div class="px-4 mt-4">
+    <h3 data-template-id="date-heading" class="canva-text font-semibold text-sm mb-2"></h3>
+    <div class="flex gap-2 overflow-x-auto hide-scroll pb-2" id="date-row"></div>
+   </div>
+   <div class="px-4 mt-4">
+    <h3 data-template-id="time-heading" class="canva-text font-semibold text-sm mb-2"></h3>
+    <div class="grid grid-cols-3 gap-2" id="time-grid"></div>
+   </div>
+   <div class="px-4 mt-4"><label data-template-id="name-label" class="canva-text text-xs font-medium mb-1 block" for="cust-name"></label> <input id="cust-name" type="text" data-template-id="name-input" class="canva-input w-full px-3 py-2.5 rounded-xl border-0 text-sm mb-3" style="background:var(--blush);"> <label data-template-id="email-label" class="canva-text text-xs font-medium mb-1 block" for="cust-email"></label> <input id="cust-email" type="email" data-template-id="email-input" class="canva-input w-full px-3 py-2.5 rounded-xl border-0 text-sm" style="background:var(--blush);">
+   </div>
+   <div class="px-4 mt-5 mb-4"><button id="confirm-btn" onclick="confirmBooking()" disabled class="canva-button w-full py-3 rounded-2xl font-semibold text-sm transition-opacity disabled:opacity-40" data-template-id="confirm-button" style="background:var(--deep);color:#fff;"></button>
+   </div>
+   <div id="booking-error" class="px-4 hidden">
+    <p class="text-red-500 text-xs text-center"></p>
+   </div>
+  </div><!-- CONFIRMATION -->
+  <div id="confirm-screen" class="screen items-center justify-center px-6" style="min-height:calc(100 * min(var(--vh,1vh),1vh));">
+   <div class="text-center fade-in">
+    <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 check-pulse" style="background:var(--sage)"><i data-lucide="check" class="w-10 h-10 text-white"></i>
+    </div>
+    <h2 data-template-id="confirm-heading" class="canva-text font-display text-2xl mb-2"></h2>
+    <p data-template-id="confirm-sub" class="canva-text text-sm mb-5" style="color:var(--mauve)"></p>
+    <div class="rounded-2xl p-4 text-left space-y-2" style="background:white;">
+     <div class="flex justify-between">
+      <span class="text-xs" style="color:var(--mauve)">Service</span><span id="conf-service" class="text-sm font-medium" style="color:var(--deep)"></span>
+     </div>
+     <div class="flex justify-between">
+      <span class="text-xs" style="color:var(--mauve)">Specialist</span><span id="conf-specialist" class="text-sm font-medium" style="color:var(--deep)"></span>
+     </div>
+     <div class="flex justify-between">
+      <span class="text-xs" style="color:var(--mauve)">Date</span><span id="conf-date" class="text-sm font-medium" style="color:var(--deep)"></span>
+     </div>
+     <div class="flex justify-between">
+      <span class="text-xs" style="color:var(--mauve)">Time</span><span id="conf-time" class="text-sm font-medium" style="color:var(--deep)"></span>
+     </div>
+    </div><button onclick="navigateTo('home')" data-template-id="back-home-btn" class="canva-button mt-5 px-8 py-3 rounded-2xl font-semibold text-sm" style="background:var(--deep);color:#fff;"></button>
+   </div>
+  </div><!-- PROFILE -->
+  <div id="profile-screen" class="screen" style="padding-bottom:70px;">
+   <div class="pt-6 pb-4 flex flex-col items-center" style="background:linear-gradient(to bottom, var(--blush), var(--cream));">
+    <div class="w-20 h-20 rounded-full overflow-hidden border-3" style="border:3px solid var(--rose);"><img data-template-id="profile-avatar" class="canva-image w-full h-full object-cover" loading="lazy">
+    </div>
+    <h2 data-template-id="profile-name" class="canva-text font-display text-lg mt-2"></h2>
+    <p data-template-id="profile-email" class="canva-text text-xs" style="color:var(--mauve)"></p>
+   </div>
+   <div class="px-4 mt-4">
+    <h3 data-template-id="upcoming-heading" class="canva-text font-semibold text-sm mb-3"></h3>
+    <div id="appointments-list" class="space-y-2">
+     <p data-template-id="no-appointments" class="canva-text text-xs text-center py-6" style="color:var(--mauve)"></p>
+    </div>
+   </div>
+   <div class="px-4 mt-5 space-y-2"><button class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm" style="background:white;"> <i data-lucide="bell" class="w-4 h-4" style="color:var(--rose)"></i> <span data-template-id="notif-label" class="canva-text"></span> </button> <button class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm" style="background:white;"> <i data-lucide="settings" class="w-4 h-4" style="color:var(--rose)"></i> <span data-template-id="settings-label" class="canva-text"></span> </button> <button class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm" style="background:white;"> <i data-lucide="heart" class="w-4 h-4" style="color:var(--rose)"></i> <span data-template-id="favourites-label" class="canva-text"></span> </button>
+   </div>
+  </div><!-- BOTTOM NAV -->
+  <nav id="bottom-nav" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full flex justify-around items-center py-2.5 border-t z-50" style="max-width:480px;background:white;border-color:#f0e0e0;" aria-label="Main navigation"><button onclick="navigateTo('home')" class="nav-item active flex flex-col items-center gap-0.5 px-4 py-1" data-nav="home"> <i data-lucide="home" class="w-5 h-5"></i> <span class="text-[10px]">Home</span>
+    <div class="nav-dot w-1 h-1 rounded-full opacity-0" style="background:var(--deep)"></div></button> <button onclick="navigateTo('services')" class="nav-item flex flex-col items-center gap-0.5 px-4 py-1" style="color:var(--mauve)" data-nav="services"> <i data-lucide="scissors" class="w-5 h-5"></i> <span class="text-[10px]">Services</span>
+    <div class="nav-dot w-1 h-1 rounded-full opacity-0" style="background:var(--deep)"></div></button> <button onclick="navigateTo('booking')" class="nav-item flex flex-col items-center gap-0.5 px-4 py-1" style="color:var(--mauve)" data-nav="booking"> <i data-lucide="calendar" class="w-5 h-5"></i> <span class="text-[10px]">Book</span>
+    <div class="nav-dot w-1 h-1 rounded-full opacity-0" style="background:var(--deep)"></div></button> <button onclick="navigateTo('profile')" class="nav-item flex flex-col items-center gap-0.5 px-4 py-1" style="color:var(--mauve)" data-nav="profile"> <i data-lucide="user" class="w-5 h-5"></i> <span class="text-[10px]">Profile</span>
+    <div class="nav-dot w-1 h-1 rounded-full opacity-0" style="background:var(--deep)"></div></button>
+  </nav><!-- Appointment card template (unbound) -->
+  <template id="appt-template">
+   <div data-template-id="appt-card" class="canva-card flex items-center gap-3 p-3 rounded-xl" style="background:white;">
+    <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background:var(--blush)"><i data-lucide="calendar-check" class="w-5 h-5" style="color:var(--rose)"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+     <p data-template-id="appt-card-service" class="canva-text font-medium text-sm truncate"></p>
+     <p data-template-id="appt-card-detail" class="canva-text text-xs" style="color:var(--mauve)"></p>
+    </div>
+   </div>
+  </template>
+  <script src="/_sdk/editing_sdk.js"></script>
+  <script>
+    // State
+    let selectedService = null;
+    let selectedSpecialist = null;
+    let selectedDate = null;
+    let selectedTime = null;
+    let allAppointments = [];
+    let currentScreen = 'splash';
+
+    const TIMES = ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','14:00','14:30','15:00','15:30','16:00'];
+
+    // Navigation
+    function navigateTo(screen) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const el = document.getElementById(screen + '-screen');
+        if (el) { el.classList.add('active'); currentScreen = screen; }
+        document.getElementById('bottom-nav').style.display = (screen === 'splash' || screen === 'confirm') ? 'none' : 'flex';
+        document.querySelectorAll('.nav-item').forEach(n => {
+            n.classList.remove('active');
+            n.style.color = '#c9a0a0';
+        });
+        const activeNav = document.querySelector(`[data-nav="${screen}"]`);
+        if (activeNav) { activeNav.classList.add('active'); activeNav.style.color = '#5c3d3d'; }
+    }
+
+    function goBack() {
+        if (selectedService && !selectedSpecialist) navigateTo('services');
+        else navigateTo('home');
+    }
+
+    // Splash auto-advance
+    setTimeout(() => navigateTo('home'), 2200);
+
+    // Service selection
+    function selectServiceByName(name) {
+        selectedService = name;
+        document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+        const card = document.querySelector(`[data-service="${name}"]`);
+        if (card) card.classList.add('selected');
+        navigateTo('booking');
+        updateBookingSummary();
+    }
+
+    // Specialist selection
+    function selectSpecialistByName(name) {
+        selectedSpecialist = name;
+        if (!selectedService) selectedService = 'Haircut & Styling';
+        navigateTo('booking');
+        updateBookingSummary();
+    }
+
+    function updateBookingSummary() {
+        document.getElementById('booking-service-name').textContent = selectedService || 'Select a service';
+        document.getElementById('booking-specialist-name').textContent = selectedSpecialist ? 'with ' + selectedSpecialist : 'Any available specialist';
+    }
+
+    // Date generation
+    function buildDates() {
+        const row = document.getElementById('date-row');
+        row.innerHTML = '';
+        const today = new Date();
+        for (let i = 0; i < 14; i++) {
+            const d = new Date(today);
+            d.setDate(today.getDate() + i);
+            const btn = document.createElement('button');
+            btn.className = 'day-btn flex flex-col items-center px-3 py-2 rounded-xl flex-shrink-0 text-xs transition-colors';
+            btn.style.background = '#fff';
+            btn.style.color = '#5c3d3d';
+            btn.style.minWidth = '52px';
+            const day = d.toLocaleDateString('en-IN', { weekday: 'short' });
+            const num = d.getDate();
+            btn.innerHTML = `<span class="font-medium">${day}</span><span class="text-lg font-bold">${num}</span>`;
+            const iso = d.toISOString().split('T')[0];
+            btn.onclick = () => selectDate(iso, btn);
+            row.appendChild(btn);
+        }
+    }
+
+    function selectDate(iso, btn) {
+        selectedDate = iso;
+        document.querySelectorAll('.day-btn').forEach(b => { b.classList.remove('selected'); b.style.background = '#fff'; b.style.color = '#5c3d3d'; });
+        btn.classList.add('selected');
+        buildTimes();
+        checkConfirm();
+    }
+
+    function buildTimes() {
+        const grid = document.getElementById('time-grid');
+        grid.innerHTML = '';
+        TIMES.forEach(t => {
+            const btn = document.createElement('button');
+            btn.className = 'time-slot px-3 py-2.5 rounded-xl text-xs font-medium transition-colors';
+            btn.style.background = '#fff';
+            btn.style.color = '#5c3d3d';
+            btn.textContent = t;
+            btn.onclick = () => selectTime(t, btn);
+            grid.appendChild(btn);
+        });
+    }
+
+    function selectTime(t, btn) {
+        selectedTime = t;
+        document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        checkConfirm();
+    }
+
+    function checkConfirm() {
+        document.getElementById('confirm-btn').disabled = !(selectedDate && selectedTime);
+    }
+
+    // Booking confirmation
+    async function confirmBooking() {
+        const name = document.getElementById('cust-name').value.trim() || 'Guest';
+        const email = document.getElementById('cust-email').value.trim() || '';
+        if (allAppointments.length >= 999) {
+            showError('Maximum appointments reached. Please delete some first.');
+            return;
+        }
+        const btn = document.getElementById('confirm-btn');
+        btn.disabled = true;
+        btn.textContent = 'Booking...';
+
+        const result = await window.dataSdk.create({
+            customer_name: name,
+            customer_email: email,
+            service_name: selectedService || 'General',
+            specialist_name: selectedSpecialist || 'Any',
+            appointment_date: selectedDate,
+            appointment_time: selectedTime,
+            status: 'confirmed',
+            created_at: new Date().toISOString()
+        });
+
+        btn.textContent = 'Confirm Booking';
+        if (result.isOk) {
+            document.getElementById('conf-service').textContent = selectedService;
+            document.getElementById('conf-specialist').textContent = selectedSpecialist || 'Any available';
+            const dateObj = new Date(selectedDate + 'T00:00:00');
+            document.getElementById('conf-date').textContent = dateObj.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' });
+            document.getElementById('conf-time').textContent = selectedTime;
+            navigateTo('confirm');
+            selectedDate = null; selectedTime = null;
+        } else {
+            showError('Booking failed. Please try again.');
+            btn.disabled = false;
+        }
+    }
+
+    function showError(msg) {
+        const el = document.getElementById('booking-error');
+        el.classList.remove('hidden');
+        el.querySelector('p').textContent = msg;
+        setTimeout(() => el.classList.add('hidden'), 3000);
+    }
+
+    // Render appointments
+    function renderAppointments(data) {
+        const list = document.getElementById('appointments-list');
+        const noAppt = list.querySelector('[data-template-id="no-appointments"]');
+        // Remove old dynamic cards
+        list.querySelectorAll('.appt-dynamic').forEach(e => e.remove());
+        if (data.length === 0) { if (noAppt) noAppt.style.display = ''; return; }
+        if (noAppt) noAppt.style.display = 'none';
+        const tpl = document.getElementById('appt-template');
+        const sorted = [...data].sort((a, b) => (a.appointment_date || '').localeCompare(b.appointment_date || ''));
+        sorted.forEach(appt => {
+            const clone = tpl.content.cloneNode(true);
+            const card = clone.querySelector('[data-template-id="appt-card"]');
+            card.classList.add('appt-dynamic');
+            clone.querySelector('[data-template-id="appt-card-service"]').textContent = appt.service_name || 'Service';
+            const d = appt.appointment_date ? new Date(appt.appointment_date + 'T00:00:00') : null;
+            const dateStr = d ? d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '';
+            clone.querySelector('[data-template-id="appt-card-detail"]').textContent = `${appt.specialist_name || 'Specialist'} · ${dateStr} ${appt.appointment_time || ''}`;
+            list.appendChild(clone);
+        });
+        lucide.createIcons();
+    }
+
+    // Search
+    document.addEventListener('DOMContentLoaded', () => {
+        buildDates();
+        buildTimes();
+        updateBookingSummary();
+        lucide.createIcons();
+
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const q = e.target.value.toLowerCase();
+                document.querySelectorAll('#services-list .service-card').forEach(card => {
+                    const name = card.dataset.service.toLowerCase();
+                    card.style.display = name.includes(q) ? '' : 'none';
+                });
+                if (q.length > 0) navigateTo('services');
+            });
+        }
+    });
+
+    // Data SDK
+    const dataHandler = {
+        onDataChanged(data) {
+            allAppointments = data;
+            renderAppointments(data);
+        }
+    };
+    (async () => {
+        const res = await window.dataSdk.init(dataHandler);
+        if (!res.isOk) console.error('Data SDK init failed');
+    })();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9fd027c296451ec2',t:'MTc3ODk5NTA0Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
